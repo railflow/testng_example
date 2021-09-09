@@ -1,0 +1,16 @@
+language: java
+
+git:
+  depth: 3
+
+services:
+  - docker
+
+before_install:
+- docker pull railflow/railflow:2.0.6
+- docker run -d railflow/railflow:2.0.6 /bin/sh -c "cd /usr/railflow"
+- docker ps -a
+# - docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
+
+# script:
+# - bundle exec rake test
