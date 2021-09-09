@@ -15,16 +15,14 @@ jobs:
       - checkout
       # run tests!
       - run: mvn clean test || true
+      - run: ls .
       - store_artifacts:
           path: ./target/surefire-reports/testng-results.xml
 
-  test:
+  railflow_test:
     docker:
       - image: railflow/railflow:2.0.6
 
     working_directory: /usr/railflow
     steps:
-      - run:
-          name: List dir
-          command: |
-            ls .
+      - run: ls .
