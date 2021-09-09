@@ -18,7 +18,7 @@ jobs:
       - store_artifacts:
           path: ./target/surefire-reports/testng-results.xml
 
-  build:
+  railflow-testing:
     docker:
       - image: railflow/railflow:2.0.6
 
