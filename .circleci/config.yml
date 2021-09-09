@@ -26,4 +26,5 @@ jobs:
     steps:
       - run:
           name: List dir
-          run: ls .
+          command: |
+            ls .
