@@ -13,11 +13,16 @@ before_install:
 - docker run -d railflow/railflow:2.0.6 /bin/sh -c "cd /usr/railflow"
 
 jobs:
-  allow_failures:
-    - name: "Mvn test"
+  allow_failures: 
+    env:
+      - CAN_FAIL=true
 
   include:
+    env: CAN_FAIL=true
+    
     - stage: "Mvn test"                # naming the Tests stage
       name: "Mvn test"            # names the first Tests stage job
-    - mvn clean test
-    - ls
+    
+    script:
+      - mvn clean test
+      - ls
