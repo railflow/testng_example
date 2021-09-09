@@ -8,14 +8,15 @@ services:
 
 install: true
 
-jobs:
-  allow_failures:
-
 before_install:
 - docker pull railflow/railflow:2.0.6
 - docker run -d railflow/railflow:2.0.6 /bin/sh -c "cd /usr/railflow"
-- docker ps -a
-# - docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
 
-script:
-- mvn clean test
+jobs:
+  allow_failures:
+    - name: "Mvn test"
+
+  include:
+    - stage: "Mvn test"                # naming the Tests stage
+      name: "Mvn test"            # names the first Tests stage job
+    - mvn clean test
