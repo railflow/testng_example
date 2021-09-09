@@ -6,6 +6,11 @@ git:
 services:
   - docker
 
+install: false
+
+jobs:
+  allow_failures:
+    
 before_install:
 - docker pull railflow/railflow:2.0.6
 - docker run -d railflow/railflow:2.0.6 /bin/sh -c "cd /usr/railflow"
@@ -14,7 +19,3 @@ before_install:
 
 script:
 - mvn clean test
-
-jobs:
-  allow_failures:
-  - java
