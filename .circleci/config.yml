@@ -1,5 +1,12 @@
 version: 2
 jobs:
+  railflow_test:
+    docker:
+      - image: railflow/railflow:2.0.6
+
+    working_directory: /usr/railflow
+    steps:
+      - run: ls .
   build:
     docker:
       - image: circleci/openjdk:8-jdk
@@ -18,11 +25,3 @@ jobs:
       - run: ls .
       - store_artifacts:
           path: ./target/surefire-reports/testng-results.xml
-
-  railflow_test:
-    docker:
-      - image: railflow/railflow:2.0.6
-
-    working_directory: /usr/railflow
-    steps:
-      - run: ls .
