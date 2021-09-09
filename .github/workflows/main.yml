@@ -1,0 +1,54 @@
+name: Maven Test
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+jobs:
+  mvn-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run mvn clean test
+        run: mvn clean test
+        continue-on-error: true
+      - uses: actions/upload-artifact@v2
+        with:
+          name: maven_build
+          path: ./target/surefire-reports/testng-results.xml
+        if: ${{ always() }}
+
+  railflow-test:
+    runs-on: ubuntu-latest
+    container: railflow/railflow:2.0.6
+    needs: [mvn-test]
+    defaults:
+      run:
+        working-directory: /usr/railflow
+    
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: maven_build
+          path: /usr/railflow
+      - name: List build download dir
+        run: ls /usr/railflow
+
+      # Runs a single command using the runners shell
+      - name: Run railflow testing
+        env:
+          RAILFLOW_KEY: ${{ secrets.RAILFLOW_KEY }}
+          RAILFLOW_USERNAME: ${{ secrets.RAILFLOW_USERNAME }}
+          RAILFLOW_PASSWORD: ${{ secrets.RAILFLOW_PASSWORD }}
+        run: npx railflow -k $RAILFLOW_KEY -url https://testrail6.railflow.io/ -u $RAILFLOW_USERNAME -p $RAILFLOW_PASSWORD -pr "Github-Demo" -path Demo/TestNG -f testng -r /usr/railflow/testng-results.xml -tp TestPlanName
+
