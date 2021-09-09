@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  mvn-test:
+  build:
     docker:
       - image: circleci/openjdk:8-jdk
 
@@ -18,7 +18,7 @@ jobs:
       - store_artifacts:
           path: ./target/surefire-reports/testng-results.xml
 
-  railflow-testing:
+  test:
     docker:
       - image: railflow/railflow:2.0.6
 
