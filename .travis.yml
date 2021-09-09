@@ -20,3 +20,4 @@ jobs:
     - stage: "Mvn test"                # naming the Tests stage
       name: "Mvn test"            # names the first Tests stage job
     - mvn clean test
+    - ls
