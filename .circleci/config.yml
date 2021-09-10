@@ -12,7 +12,10 @@ jobs:
             curl -H "Circle-Token: $CIRCLE_TOKEN" https://circleci.com/api/v1.1/project/github/railflow/testng_example/10/artifacts \
             | grep -o 'https://[^"]*' \
             | wget --verbose --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
-      - run: ls .
+      - run:
+          name: Run railflow testing
+        run: npx railflow -k $RAILFLOW_KEY -url https://testrail6.railflow.io/ -u $RAILFLOW_USERNAME -p $RAILFLOW_PASSWORD -pr "Github-Demo" -path Demo/TestNG -f testng -r /usr/railflow/testng-results.xml -tp TestPlanName
+
 
   build:
     docker:
