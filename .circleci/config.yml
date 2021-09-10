@@ -25,3 +25,12 @@ jobs:
       - run: ls .
       - store_artifacts:
           path: ./target/surefire-reports/testng-results.xml
+  workflows:
+  version: 2
+  test_and_build:
+    jobs:
+      - railflow_test
+      - build:
+          requires:
+            - railflow_test
+
