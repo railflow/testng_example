@@ -16,5 +16,5 @@ script:
 - mvn clean test || true
 - ls ./target/surefire-reports
 - cp ./target/surefire-reports/testng-results.xml /usr/railflow
-- npx railflow -k $RAILFLOW_KEY -url https://testrail6.railflow.io/ -u $RAILFLOW_USERNAME -p $RAILFLOW_PASSWORD -pr "Github-Demo" -path Demo/TestNG -f testng -r /usr/railflow/testng-results.xml -tp TestPlanName
+- npx railflow -k $RAILFLOW_KEY -url https://testrail6.railflow.io/ -u $RAILFLOW_USERNAME -p $RAILFLOW_PASSWORD -pr "Github-Demo" -path Demo/TestNG -f testng -r /target/surefire-reports/testng-results.xml -tp TestPlanName
 
