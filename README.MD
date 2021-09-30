@@ -21,5 +21,5 @@ npm install railflow
 2. Run `railflow`
 
 ```shell
-npx railflow -k XXXXX-XXXXX-XXXXX-XXXXX -url https://testrail.server.address/ -u username@company.io -p password -pr "Railflow Demo" -path Demo/TestNG -f testng -r target/surefire-reports/testng-results.xml -plan TestPlanName
+npx railflow -k XXXXX-XXXXX-XXXXX-XXXXX -url https://testrail.server.address/ -u username@company.io -p password -pr "Railflow Demo" -path Demo/TestNG -f testng -r target/surefire-reports/testng-results.xml -tp TestPlanName
 ```
