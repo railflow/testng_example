@@ -29,7 +29,7 @@ jobs:
 
   railflow-test:
     runs-on: ubuntu-latest
-    container: railflow/railflow:2.0.6
+    container: railflow/railflow:latest
     needs: [mvn-test]
     defaults:
       run:
