@@ -89,4 +89,17 @@ workflows:
       - railflow_orb_test:
           requires:
             - build
+  pull_request:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - main
+      - railflow_test:
+          requires:
+            - build
+      - railflow_orb_test:
+          requires:
+            - build
 
