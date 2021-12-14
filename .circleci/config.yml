@@ -1,4 +1,8 @@
-version: 2
+---
+version: 2.1
+orbs:
+  railflow: railflow/railflow-orb@0.0.5
+
 jobs:
   build:
     docker:
@@ -19,6 +23,11 @@ jobs:
       - store_artifacts:
           path: ./target/surefire-reports/testng-results.xml
 
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - ./target
+
   railflow_test:
     docker:
       - image: railflow/railflow:2.0.6
@@ -35,12 +44,67 @@ jobs:
           name: Run railflow testing
           command: npx railflow -k $RAILFLOW_KEY -url https://testrail6.railflow.io/ -u $RAILFLOW_USERNAME -p $RAILFLOW_PASSWORD -pr "Github-Demo" -path Demo/TestNG -f testng -r /usr/railflow/testng-results.xml -tp TestPlanName
 
+  railflow_orb_test:
+    working_directory: ~/repo
+    executor: railflow/default
+    shell: /bin/bash --login -o pipefail
+    environment:
+      # secrets store in circleci environment variables for project
+      # RAILFLOW_KEY
+      # RAILFLOW_USERNAME
+      # RAILFLOW_PASSWORD
+
+      RAILFLOW_URL: https://testrail6.railflow.io/
+      RAILFLOW_PROJECT_NAME: Github-Demo
+      RAILFLOW_PROJECT_PATH: Demo/TestNG
+      RAILFLOW_REPORT_FORMAT: testng
+      RAILFLOW_REPORT_PATH: ~/repo/target/surefire-reports/testng-results.xml
+      RAILFLOW_SEARCH_MODE: path
+      RAILFLOW_TEST_PLAN: TestPlanName
+      RAILFLOW_ASSIGN_FAILURE_TO: redcom@gmail.com
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - railflow/test:
+          RAILFLOW_KEY: $RAILFLOW_KEY_RAZVAN
+          RAILFLOW_URL: $RAILFLOW_URL
+          RAILFLOW_USERNAME: $RAILFLOW_USERNAME
+          RAILFLOW_PASSWORD: $RAILFLOW_PASSWORD
+          RAILFLOW_PROJECT_NAME: $RAILFLOW_PROJECT_NAME
+          RAILFLOW_PROJECT_PATH: $RAILFLOW_PROJECT_PATH
+          RAILFLOW_REPORT_FORMAT: $RAILFLOW_REPORT_FORMAT
+          RAILFLOW_REPORT_PATH: $RAILFLOW_REPORT_PATH
+          RAILFLOW_SEARCH_MODE: $RAILFLOW_SEARCH_MODE
+          RAILFLOW_TEST_PLAN: $RAILFLOW_TEST_PLAN
+          RAILFLOW_ASSIGN_FAILURE_TO: $RAILFLOW_ASSIGN_FAILURE_TO
+
+      - store_artifacts:
+          path: $RAILFLOW_REPORT_PATH
+          destination: railflow-artifacts
 workflows:
-  version: 2
+  version: 2.1
   build_and_test:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only:
+                - development
       - railflow_test:
+          requires:
+            - build
+  pull_request:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - main
+      - railflow_test:
+          requires:
+            - build
+      - railflow_orb_test:
           requires:
             - build
 
