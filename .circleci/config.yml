@@ -1,7 +1,7 @@
 ---
 version: 2.1
 orbs:
-  railflow: railflow/railflow-orb@0.0.1
+  railflow: railflow/railflow-orb@0.0.4
 
 jobs:
   build:
@@ -23,6 +23,11 @@ jobs:
       - store_artifacts:
           path: ./target/surefire-reports/testng-results.xml
 
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - ./target
+
   railflow_test:
     docker:
       - image: railflow/railflow:2.0.6
@@ -40,25 +45,30 @@ jobs:
           command: npx railflow -k $RAILFLOW_KEY -url https://testrail6.railflow.io/ -u $RAILFLOW_USERNAME -p $RAILFLOW_PASSWORD -pr "Github-Demo" -path Demo/TestNG -f testng -r /usr/railflow/testng-results.xml -tp TestPlanName
 
   railflow_orb_test:
-    working_directory: /usr/railflow-orb
+    working_directory: ~/repo
     executor: railflow/default
     shell: /bin/bash --login -o pipefail
     environment:
-      RAILFLOW_KEY: $RAILFLOW_KEY
+      # secrets store in circleci environment variables for project
+      # RAILFLOW_KEY
+      # RAILFLOW_USERNAME
+      # RAILFLOW_PASSWORD
+
       RAILFLOW_URL: https://testrail6.railflow.io/
-      RAILFLOW_USERNAME: $RAILFLOW_USERNAME
-      RAILFLOW_PASSWORD: $RAILFLOW_PASSWORD
-      RAILFLOW_PROJECT_NAME: Github-ORB-Demo
+      RAILFLOW_PROJECT_NAME: Github-Demo
       RAILFLOW_PROJECT_PATH: Demo/TestNG
       RAILFLOW_REPORT_FORMAT: testng
-      RAILFLOW_REPORT_PATH: /usr/railflow-orb/testng-results.xml
+      RAILFLOW_REPORT_PATH: ~/repo/target/surefire-reports/testng-results.xml
       RAILFLOW_SEARCH_MODE: path
-      RAILFLOW_TEST_PLAN: OrbTestPlanName
-      RAILFLOW_TEST_RUN: tr_testrun
+      RAILFLOW_TEST_PLAN: TestPlanName
+      RAILFLOW_TEST_RUN: ""
       RAILFLOW_ASSIGN_FAILURE_TO: redcom@gmail.com
     steps:
+      - checkout
+      - attach_workspace:
+          at: ./
       - railflow/test:
-          RAILFLOW_KEY: $RAILFLOW_KEY
+          RAILFLOW_KEY: $RAILFLOW_KEY_RAZVAN
           RAILFLOW_URL: $RAILFLOW_URL
           RAILFLOW_USERNAME: $RAILFLOW_USERNAME
           RAILFLOW_PASSWORD: $RAILFLOW_PASSWORD
@@ -70,10 +80,6 @@ jobs:
           RAILFLOW_TEST_PLAN: $RAILFLOW_TEST_PLAN
           RAILFLOW_TEST_RUN: $RAILFLOW_TEST_RUN
           RAILFLOW_ASSIGN_FAILURE_TO: $RAILFLOW_ASSIGN_FAILURE_TO
-      - run:
-          name: Run railflow testing
-          command: |
-            echo -e "\n$RAILFLOW_KEY\n$RAILFLOW_USERNAME\n$RAILFLOW_PASSWORD" > testsetup && cat testsetup
 
       - store_artifacts:
           path: $RAILFLOW_REPORT_PATH
