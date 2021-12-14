@@ -1,7 +1,7 @@
 ---
 version: 2.1
 orbs:
-  railflow: railflow/railflow-orb@0.0.4
+  railflow: railflow/railflow-orb@0.0.5
 
 jobs:
   build:
@@ -61,7 +61,6 @@ jobs:
       RAILFLOW_REPORT_PATH: ~/repo/target/surefire-reports/testng-results.xml
       RAILFLOW_SEARCH_MODE: path
       RAILFLOW_TEST_PLAN: TestPlanName
-      RAILFLOW_TEST_RUN: ""
       RAILFLOW_ASSIGN_FAILURE_TO: redcom@gmail.com
     steps:
       - checkout
@@ -78,7 +77,6 @@ jobs:
           RAILFLOW_REPORT_PATH: $RAILFLOW_REPORT_PATH
           RAILFLOW_SEARCH_MODE: $RAILFLOW_SEARCH_MODE
           RAILFLOW_TEST_PLAN: $RAILFLOW_TEST_PLAN
-          RAILFLOW_TEST_RUN: $RAILFLOW_TEST_RUN
           RAILFLOW_ASSIGN_FAILURE_TO: $RAILFLOW_ASSIGN_FAILURE_TO
 
       - store_artifacts:
