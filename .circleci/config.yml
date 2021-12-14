@@ -82,11 +82,12 @@ workflows:
   version: 2.1
   build_and_test:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only:
+                - development
       - railflow_test:
-          requires:
-            - build
-      - railflow_orb_test:
           requires:
             - build
   pull_request:
