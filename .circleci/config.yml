@@ -40,7 +40,7 @@ jobs:
           command: npx railflow -k $RAILFLOW_KEY -url https://testrail6.railflow.io/ -u $RAILFLOW_USERNAME -p $RAILFLOW_PASSWORD -pr "Github-Demo" -path Demo/TestNG -f testng -r /usr/railflow/testng-results.xml -tp TestPlanName
 
   railflow_orb_test:
-    working_directory: /usr/railflow
+    working_directory: /usr/railflow-orb
     executor: railflow/default
     shell: /bin/bash --login -o pipefail
     environment:
@@ -51,7 +51,7 @@ jobs:
       RAILFLOW_PROJECT_NAME: Github-ORB-Demo
       RAILFLOW_PROJECT_PATH: Demo/TestNG
       RAILFLOW_REPORT_FORMAT: testng
-      RAILFLOW_REPORT_PATH: /usr/railflow/testng-results.xml
+      RAILFLOW_REPORT_PATH: /usr/railflow-orb/testng-results.xml
       RAILFLOW_SEARCH_MODE: path
       RAILFLOW_TEST_PLAN: OrbTestPlanName
       RAILFLOW_TEST_RUN: tr_testrun
